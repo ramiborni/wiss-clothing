@@ -5,6 +5,7 @@ import {
 import {getRedirectResult} from "firebase/auth";
 import './sign-in-form.styles.scss';
 import FormInput from "../form-input/form-input.component";
+import Button from "../button/button.component";
 
 const defaultForm = {
     email: '', password: ''
@@ -53,25 +54,30 @@ const SignInForm = () => {
         }
     }
 
-    return (<div>
-        <h1>Sign In with your email & password</h1>
-        <form onSubmit={handleSubmit}>
-            <FormInput value={email}
-                       label="E-mail"
-                       type="email"
-                       name="email"
-                       required
-                       onChange={handleChange}/>
-            <FormInput value={password}
-                       label="Password"
-                       type="password"
-                       name="password"
-                       required
-                       onChange={handleChange}/>
-            <button type="submit">Sign In</button>
-            <button onClick={signInWIthGoogleRedirect}>Sign in with Google Redirect</button>
-        </form>
-    </div>)
+    return (
+        <div className='sign-in-container'>
+            <h2>Already have an account?</h2>
+            <span>Sign in with your email and password</span>
+            <form onSubmit={handleSubmit}>
+                <FormInput value={email}
+                           label="E-mail"
+                           type="email"
+                           name="email"
+                           required
+                           onChange={handleChange}/>
+                <FormInput value={password}
+                           label="Password"
+                           type="password"
+                           name="password"
+                           required
+                           onChange={handleChange}/>
+                <div className='buttons-container'>
+                    <Button type="submit">Sign In</Button>
+                    <Button buttonType='google' onClick={signInWIthGoogleRedirect}>Sign in with Google Redirect</Button>
+                </div>
+            </form>
+        </div>
+    )
 }
 
 export default SignInForm;
