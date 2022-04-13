@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     auth, createUserDocumentFromAuth, loginUserWithEmailAndPassword, signInWIthGoogleRedirect
 } from "../../utils/firebase/firebase.utils";
@@ -6,6 +6,7 @@ import {getRedirectResult} from "firebase/auth";
 import './sign-in-form.styles.scss';
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
+import {UserContext} from "../../context/context.user";
 
 const defaultForm = {
     email: '', password: ''
@@ -15,10 +16,10 @@ const SignInForm = () => {
 
     useEffect(() => {
         const RedirectResult = async () => {
-            const response = await getRedirectResult(auth)
-            if (response) {
-                const userDocRef = createUserDocumentFromAuth(response.user);
-                console.log(userDocRef);
+            const {user} = await getRedirectResult(auth)
+            if (user) {
+                const userDocRef = await createUserDocumentFromAuth(user);
+                setCurrentUser(user);
             }
         };
         RedirectResult();
@@ -27,6 +28,9 @@ const SignInForm = () => {
 
     const [formFields, setFormFields,] = useState(defaultForm);
     const {email, password} = formFields;
+
+    const {setCurrentUser} = useContext(UserContext)
+
 
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -39,7 +43,8 @@ const SignInForm = () => {
             return;
         } else {
             try {
-                await loginUserWithEmailAndPassword(email, password);
+                const {user} = await loginUserWithEmailAndPassword(email, password);
+                setCurrentUser(user);
                 alert('Successfully logged in');
             } catch (e) {
                 console.error(e);
